@@ -1,0 +1,53 @@
+#include "Window.h"
+#include "Core.h"
+#include "renderer/OpenGLContext.h"
+
+#include <GLFW/glfw3.h>
+
+namespace Engine {
+
+    static bool s_GLFWInitialized = false;
+
+    Window* Window::Create(const WindowProps& props) {
+        return new Window(props);
+    }
+
+    Window::Window(const WindowProps& props) {
+        Init(props);
+    }
+
+    Window::~Window() {
+        Shutdown();
+    }
+
+    void Window::Init(const WindowProps& props) {
+        m_Data.Title = props.Title;
+        m_Data.Width = props.Width;
+        m_Data.Height = props.Height;
+
+        ENGINE_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
+
+        if (!s_GLFWInitialized) {
+            int success = glfwInit();
+            ENGINE_CORE_ASSERT(success, "Could not initialize GLFW!");
+            s_GLFWInitialized = true;
+        }
+
+        m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+        
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
+
+        glfwSetWindowUserPointer(m_Window, &m_Data);
+    }
+
+    void Window::Shutdown() {
+        glfwDestroyWindow(m_Window);
+    }
+
+    void Window::OnUpdate() {
+        glfwPollEvents();
+        m_Context->SwapBuffers();
+    }
+
+}
