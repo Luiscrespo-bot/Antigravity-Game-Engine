@@ -90,4 +90,4 @@
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-*Built with ❤️ by [Your Name/Antigravity Team]*
+*Built with ❤️ by [Luis Fernando Crespo Soliz/Antigravity Game Engine Team]*
